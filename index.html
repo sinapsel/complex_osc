@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Oscillo</title>
+  </head>
+  <body>
+    <div id="block1">
+      <table>
+      <tr>
+      <td>
+      <canvas id="canvas">NO SUPPORT</canvas>
+      </td>
+      <td>
+      <div id="panel">
+        <input type="button" value="Reset" onclick="settings_block.reset()"/>
+        <input type="button" value="Start/Stop" onclick="settings_block.play()"/>
+        <p>Amount of pendulums:<br/>
+          <input type="number" name="amount" id="amount" min="0" max="10" step="1" value="1" onchange="change_tooglebox()"/>
+        </p>
+        <div id="pendbox">
+          <div id="pend-1" class="pend">
+            <p>#1</p>
+            <p>Length:<br/>
+              <input type="number" id="length-1" min="1" step="1" value="25" onclick="change_toogles(this)"/>
+            </p>
+            <p>Radius<br/>
+              <input type="number" id="radius-1" min="3" max="10" step="1" value="5" onclick="change_toogles(this)"/>
+            </p>
+            <p>Angular amplitude (deg):<br/>
+              <input type="number" id="ampl-1" min="-180" max="180" step="0.5" value="30" onclick="change_toogles(this)"/>
+            </p>
+            <p>Trace?<br/>
+              <input type="checkbox" id="chkbox-1" checked/>
+            </p>
+          </div>
+        </div>
+      </div>
+      </td>
+      </tr>
+    </table>
+    </div>
+  </body>
+  <script src="main.js" charset="utf-8"></script>
+</html>

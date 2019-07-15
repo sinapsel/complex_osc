@@ -1,0 +1,32 @@
+body {
+  background-color: #BCBCCD;
+}
+
+td {
+  padding: 0;x
+}
+
+#block1 {
+  margin: 10px;
+  padding: 5px;
+  border: 1px outset black;
+}
+
+#panel {
+  border: 1px inset #555;
+  border-radius: 3px;
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.pend {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 2%;
+  margin-top: 2%;
+}
+
+canvas {
+  border: 1px ridge #121212;
+  /*background-color: black;*/
+}
