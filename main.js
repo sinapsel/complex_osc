@@ -1,4 +1,4 @@
-var g = -9.8, dt = 1e-2, sqrt = Math.sqrt, pi = Math.PI, e = Math.e,
+var g = -9.8, dt = 1e-2, osc_color = "#FFE9E6", sqrt = Math.sqrt, pi = Math.PI, e = Math.e,
  exp = Math.exp, sin = Math.sin, cos = Math.cos, abs = Math.abs,
 
  AGM = function(a, b) {
@@ -17,7 +17,7 @@ var pendulums = [];
 
 function pendulum_toogle(id) {
   this.id = id;
-  this.inner = `<p>#${id}</p><p>Length:<br/><input type=\"number\" id=\"length-${id}\" min=\"1\" step=\"1\" value=\"25\" onclick=\"change_toogles(this)\"/></p><p>Radius<br/><input type=\"number\" id=\"radius-${id}\" min=\"3\" max=\"10\" step=\"1\" value=\"5\" onclick=\"change_toogles(this)\" /></p><p>Angular amplitude (deg):<br/><input type=\"number\" id=\"ampl-${id}\" min=\"-180\" max=\"180\" step=\"0.5\" value=\"30\" onclick=\"change_toogles(this)\"/></p><p>Trace?<br/><input type=\"checkbox\" id=\"chkbox-${id}\" checked/></p>`
+  this.inner = `<p>#${id}<input type=\"button\" id=\"refr-${id}\" value=\"Launch again\" onclick=\"change_toogles(this)\" style=\"margin-left:20px \"/></p><p>Length:<br/><input type=\"number\" id=\"length-${id}\" min=\"1\" step=\"1\" value=\"150\" onclick=\"change_toogles(this)\"/></p><p>Radius<br/><input type=\"number\" id=\"radius-${id}\" min=\"3\" max=\"10\" step=\"1\" value=\"5\" onclick=\"change_toogles(this)\" /></p><p>Angular amplitude (deg):<br/><input type=\"number\" id=\"ampl-${id}\" min=\"-180\" max=\"180\" step=\"0.5\" value=\"30\" onclick=\"change_toogles(this)\"/></p><p>Trace?<br/><input type=\"checkbox\" id=\"chkbox-${id}\" checked onclick=\"change_toogles(this)\"/></p>`
   this.elem = document.createElement('div');
   this.elem.className = "pend";
   this.elem.id = `pend-${id}`;
@@ -40,6 +40,8 @@ function change_tooglebox() {
   }
   settings_block.reset();
   plot.canvas.height = document.getElementById('panel').offsetHeight;
+  plot.tracer.height = plot.canvas.height;
+  plot.tracectx.fillStyle = osc_color;
 }
 
   function change_toogles(elem) {
@@ -55,7 +57,7 @@ function change_tooglebox() {
       get_block_value('ampl')*pi/180,
       get_block_value('radius'),
       get_block_value('length'),
-      true
+      document.getElementById(`chkbox-${idx}`).checked
     );
   }
 
@@ -86,6 +88,12 @@ function pendulum(idx, origin, angular_amplitude, radius, length, is_traceable) 
 	  plot.ctx.lineTo(this.position.x, this.position.y);
 	  plot.ctx.stroke();
     plot.ctx.closePath();
+    if (this.is_traceable) {
+      plot.tracectx.beginPath();
+      plot.tracectx.arc(this.position.x, this.position.y, 0.5, 0, 2*pi);
+      plot.tracectx.fill();
+      plot.tracectx.closePath();
+    }
     //console.log(this.position);
   };
 
@@ -99,6 +107,7 @@ function pendulum(idx, origin, angular_amplitude, radius, length, is_traceable) 
 
 function draw() {
   settings_block.reset();
+  plot.ctx.drawImage(plot.tracer, 0, 0);
   pendulums.forEach(function(_pend) {
     _pend.draw();
     _pend.calculus();
@@ -116,12 +125,21 @@ window.onload = function() {
   };
   plot.base_origin = {x: plot.canvas.width / 2, y: 0};
 
+  plot.tracer = document.createElement('canvas');
+  plot.tracer.width = plot.canvas.width;
+  plot.tracer.height = plot.canvas.height;
+  plot.tracectx = plot.tracer.getContext('2d');
+  plot.tracectx.fillStyle = osc_color;
+
+
   document.getElementById('amount').value = 1;
 
   settings_block.toogles = [];
   settings_block.is_stoped = true;
-  settings_block.reset = function() {
+  settings_block.reset = function(is_button) {
     plot.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (is_button)
+      plot.tracectx.clearRect(0, 0, canvas.width, canvas.height);
   };
   settings_block.play = function() {
     settings_block.is_stoped ^= 1;
